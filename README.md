@@ -14,3 +14,6 @@ The backend offers public and admin api:
 * Manipulate control points
 * Manipulate edges between control points thus creating walkable paths
 * Manipulate interest points
+
+Endpoints:
+https://app.swaggerhub.com/apis/festmeny/FestivalNavigation/1.0.0
