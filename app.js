@@ -21,6 +21,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(req, res, next) {
+  req.custom = {};
+  next();
+});
+
 app.use('/api/v1', maps);
 app.use('/api/v1', controls);
 app.use('/api/v1', interests);
