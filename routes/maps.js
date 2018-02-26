@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var Map = require('../models/map');
-
 var getMapList = require('../middleware/maps/getMapList');
 var createMap = require('../middleware/maps/createMap');
 var getMap = require('../middleware/maps/getMap');

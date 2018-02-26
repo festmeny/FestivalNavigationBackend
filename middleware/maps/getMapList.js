@@ -11,7 +11,7 @@ module.exports = function(req, res, next){
     Map.find({})
         .exec((err, items) => {
 
-            if (err || !items){
+            if (err){
                 var error = new Error('cannot find maps');
                 error.status = 400;
                 return next(error);

@@ -2,7 +2,6 @@ var Map = require('../../models/map');
 
 module.exports = function(req, res, next){
     var map = req.custom.map;
-    console.log("deleting");
     
     map.remove((err) => {
         if (err){

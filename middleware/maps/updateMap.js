@@ -16,9 +16,7 @@ module.exports = function(req, res, next){
         }
     }, {new: true}
     ).then((item) => {
-        console.log(item);
-        req.custom.map = item;
-        return next();
+        res.status(200).send();
     }).catch(err => {
         var error = new Error('a map already exists with requested name');
         error.status = 409;
