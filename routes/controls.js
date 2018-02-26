@@ -1,20 +1,45 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/maps/:mapId/controls', function(req, res, next) {
-    res.send("Get control points of map with mapId of " + req.params.mapId);
-});
+var getControl = require('../middleware/controls/getControl');
+var getControlList = require('../middleware/controls/getControlList');
+var createControl = require('../middleware/controls/createControl');
+var updateControl = require('../middleware/controls/updateControl');
+var deleteControl = require('../middleware/controls/deleteControl');
+var validateControl = require('../middleware/controls/validateControl');
+var renderControl = require('../middleware/render/renderControl');
+var renderControlList = require('../middleware/render/renderControlList');
 
-router.post('/maps/:mapId/controls', function(req, res, next) {
-    res.send("Post control point for map with mapId of " + req.params.mapId);
-});
+var updateEdges = require('../middleware/edge/updateEdges');
+var getEdgesForPointList = require('../middleware/edge/getEdgesForPointList');
+var deleteEdges = require('../middleware/edge/deleteEdges');
 
-router.put('/controls/:controlId', function(req, res, next) {
-    res.send("Put control point with id of " + req.params.controlId);
-});
+var Control = require('../models/control');
 
-router.delete('/controls/:controlId', function(req, res, next) {
-    res.send("Delete control point with id of " + req.params.controlId);
-});
+router.get('/maps/:mapId/controls',
+    getControlList,
+    getEdgesForPointList,
+    renderControlList
+);
+
+router.post('/maps/:mapId/controls',
+    validateControl,
+    createControl,
+    updateEdges,
+    renderControl
+);
+
+router.put('/controls/:controlId',
+    validateControl,
+    updateControl,
+    updateEdges,
+    renderControl
+);
+
+router.delete('/controls/:controlId', 
+    getControl,
+    deleteControl,
+    deleteEdges
+);
 
 module.exports = router;
