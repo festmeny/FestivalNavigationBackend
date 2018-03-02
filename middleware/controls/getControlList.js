@@ -10,7 +10,8 @@ module.exports = function(req, res, next){
                 return next(error);
             }
 
-            Control.find({map: req.params.mapId})
+            // Find only control points (not interest points)
+            Control.find({map: req.params.mapId, name: {$exists: false}})
                 .exec((err, items) => {
 
                     if (err){

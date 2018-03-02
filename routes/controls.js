@@ -13,6 +13,7 @@ var renderControlList = require('../middleware/render/renderControlList');
 var updateEdges = require('../middleware/edge/updateEdges');
 var getEdgesForPointList = require('../middleware/edge/getEdgesForPointList');
 var deleteEdges = require('../middleware/edge/deleteEdges');
+var validateNeighbors = require('../middleware/utils/validateNeighbors');
 
 var Control = require('../models/control');
 
@@ -24,6 +25,7 @@ router.get('/maps/:mapId/controls',
 
 router.post('/maps/:mapId/controls',
     validateControl,
+    validateNeighbors,
     createControl,
     updateEdges,
     renderControl
@@ -31,6 +33,7 @@ router.post('/maps/:mapId/controls',
 
 router.put('/controls/:controlId',
     validateControl,
+    validateNeighbors,
     updateControl,
     updateEdges,
     renderControl

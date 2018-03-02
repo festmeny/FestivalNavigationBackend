@@ -5,7 +5,7 @@ module.exports = function(req, res, next){
     
     control.remove((err) => {
         if (err){
-            var error = new Error('cannot delete map');
+            var error = new Error('cannot delete control');
             error.status(404);
             return next(new Error());
         }

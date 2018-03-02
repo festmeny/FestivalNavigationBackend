@@ -9,6 +9,7 @@ var maps = require('./routes/maps');
 var controls = require('./routes/controls');
 var interests = require('./routes/interests');
 var navigation = require('./routes/navigation');
+var utils = require('./routes/utils');
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use('/api/v1', maps);
 app.use('/api/v1', controls);
 app.use('/api/v1', interests);
 app.use('/api/v1', navigation);
+app.use('/api/v1/utils', utils);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
