@@ -30,16 +30,18 @@ module.exports = function(req, res, next){
         endPointIds[index] = element.id;
     });
 
+    // Then find all endPoints
     Control.find({
-        '_id': { $in: endPointIds}
+        _id: { $in: endPointIds}
     })
     .exec((err, endPoints) => {
         if (err){
-            var error = new Error('cannot get controls');
+            var error = new Error('cannot get points for edges');
             error.status = 500;
             return next(error);
         }
 
+        // And create edges between startPoint and endPoints
         Edge.create(endPoints.map( endPoint=> {
             return {
                 point_start: startPoint._id,

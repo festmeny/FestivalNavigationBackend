@@ -1,20 +1,49 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/maps/:mapId/interests', function(req, res, next) {
-    res.send("Get interest points of map with mapId of " + req.params.mapId);
-});
+var getInterest = require('../middleware/interests/getInterest');
+var getInterestList = require('../middleware/interests/getInterestList');
+var createInterest = require('../middleware/interests/createInterest');
+var updateInterest = require('../middleware/interests/updateInterest');
+var deleteInterest = require('../middleware/interests/deleteInterest');
+var validateInterest = require('../middleware/interests/validateInterest');
+var renderInterest = require('../middleware/render/renderInterest');
+var renderInterestList = require('../middleware/render/renderInterestList');
 
-router.post('/maps/:mapId/interests', function(req, res, next) {
-    res.send("Post interest point for map with mapId of " + req.params.mapId);
-});
+var updateEdges = require('../middleware/edge/updateEdges');
+var getEdgesForPointList = require('../middleware/edge/getEdgesForPointList');
+var deleteEdges = require('../middleware/edge/deleteEdges');
+var getType = require('../middleware/utils/getType');
+var validateNeighbors = require('../middleware/utils/validateNeighbors');
 
-router.put('/interests/:interestId', function(req, res, next) {
-    res.send("Put interest point with id of " + req.params.interestId);
-});
+router.get('/maps/:mapId/interests',
+    getInterestList,
+    getEdgesForPointList,
+    renderInterestList
+);
 
-router.delete('/interests/:interestId', function(req, res, next) {
-    res.send("Delete interest point with id of " + req.params.interestId);
-});
+router.post('/maps/:mapId/interests',
+    validateInterest,
+    validateNeighbors,
+    getType,
+    createInterest,
+    updateEdges,
+    renderInterest
+);
+
+router.put('/interests/:interestId', 
+    validateInterest,
+    validateNeighbors,
+    getType,
+    updateInterest,
+    updateEdges,
+    renderInterest
+);
+
+router.delete('/interests/:interestId',
+    getInterest,
+    deleteInterest,
+    deleteEdges
+);
 
 module.exports = router;

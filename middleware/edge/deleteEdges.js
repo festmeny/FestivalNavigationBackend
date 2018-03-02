@@ -1,10 +1,10 @@
 var Edge = require('../../models/edge');
 
 module.exports = function(req, res, next){
-    var control = req.custom.control;
+    var point = req.custom.control || req.custom.interest;
     Edge.deleteMany({$or: [
-        {point_start: control._id},
-        {point_end: control._id}
+        {point_start: point._id},
+        {point_end: point._id}
     ]}).exec((err, items) => {
         if (err){
             var error = new Error('cannot delete edges');

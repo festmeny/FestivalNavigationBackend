@@ -1,5 +1,3 @@
-var async = require('async');
-
 var Edge = require('../../models/edge');
 
 module.exports = async function(req, res, next){
