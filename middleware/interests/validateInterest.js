@@ -8,6 +8,9 @@ module.exports = function(req, res, next){
         return next(error);
     }
 
+    req.body.opening_hours = req.body.opening_hours || {};
+    req.body.opening_hours.all = req.body.opening_hours.all || [];
+
     if (!!req.params.mapId){
         Map.findById(req.params.mapId,
             (err, item) => {
