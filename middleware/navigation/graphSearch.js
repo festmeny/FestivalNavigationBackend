@@ -11,12 +11,29 @@ module.exports = function(req, res, next){
     })
 
     var estimate = req.custom.points.map( point => {
-        return {
-            nodes: [point._id, req.query.destination_point_id],
-            cost: Geolib.getDistance(
-                {latitude: point.lat, longitude: point.lon},
-                {latitude: req.custom.dest.lat, longitude: req.custom.dest.lon}
-            )
+        // TODO: Make efficent
+        var isolated = true;
+        for( var i = 0; i<req.custom.edges.length; i++ ){
+            if (req.custom.edges[i].point_start._id.toString() == point._id.toString() ||
+                req.custom.edges[i].point_end._id.toString() == point._id.toString()){
+                isolated = false;
+                break;
+            }
+        }
+
+        if (isolated){
+            return {
+                nodes: [point._id, req.query.destination_point_id],
+                cost: Infinity
+            }
+        }else{
+            return {
+                nodes: [point._id, req.query.destination_point_id],
+                cost: Geolib.getDistance(
+                    {latitude: point.lat, longitude: point.lon},
+                    {latitude: req.custom.dest.lat, longitude: req.custom.dest.lon}
+                )
+            }
         }
     })
 
@@ -24,6 +41,19 @@ module.exports = function(req, res, next){
     var nearestPoint;
     var shorestDistance = Infinity;
     req.custom.points.forEach(point => {
+        // TODO: Make efficent
+        var isolated = true;
+        for( var i = 0; i<req.custom.edges.length; i++ ){
+            if (req.custom.edges[i].point_start._id.toString() == point._id.toString() ||
+                req.custom.edges[i].point_end._id.toString() == point._id.toString()){
+                isolated = false;
+                break;
+            }
+        }
+
+        if (isolated)
+            return;
+
         var distance = Geolib.getDistance(
             {latitude: point.lat, longitude: point.lon},
             {latitude: req.query.current_lat, longitude: req.query.current_lon}
@@ -34,6 +64,8 @@ module.exports = function(req, res, next){
             nearestPoint = point;
         }
     });
+
+    console.log(nearestPoint, shorestDistance);
 
     // Set first edge
     estimate.push({
