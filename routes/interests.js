@@ -15,9 +15,11 @@ var getEdgesForPointList = require('../middleware/edge/getEdgesForPointList');
 var deleteEdges = require('../middleware/edge/deleteEdges');
 var getType = require('../middleware/utils/getType');
 var validateNeighbors = require('../middleware/utils/validateNeighbors');
+var unifyPointNames = require('../middleware/utils/unifyPointNames');
 
 router.get('/maps/:mapId/interests',
     getInterestList,
+    unifyPointNames,
     getEdgesForPointList,
     renderInterestList
 );

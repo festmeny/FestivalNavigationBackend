@@ -1,4 +1,4 @@
-var Interest = require('../../models/interest');
+var Edge = require('../../models/edge');
 var Map = require('../../models/map');
 
 module.exports = function(req, res, next){
@@ -10,17 +10,18 @@ module.exports = function(req, res, next){
                 return next(error);
             }
 
-            Interest.find({map: req.params.mapId})
-                .populate('type')
+            Edge.find({map: req.params.mapId})
+                .populate('point_start')
+                .populate('point_end')
                 .exec((err, items) => {
 
                     if (err){
-                        var error = new Error('cannot find interests');
+                        var error = new Error('cannot find edges');
                         error.status = 500;
                         return next(error);
                     }
 
-                    req.custom.interests = items;
+                    req.custom.edges = items;
                     return next();
                 });
         });

@@ -14,11 +14,13 @@ var updateEdges = require('../middleware/edge/updateEdges');
 var getEdgesForPointList = require('../middleware/edge/getEdgesForPointList');
 var deleteEdges = require('../middleware/edge/deleteEdges');
 var validateNeighbors = require('../middleware/utils/validateNeighbors');
+var unifyPointNames = require('../middleware/utils/unifyPointNames');
 
 var Control = require('../models/control');
 
 router.get('/maps/:mapId/controls',
     getControlList,
+    unifyPointNames,
     getEdgesForPointList,
     renderControlList
 );

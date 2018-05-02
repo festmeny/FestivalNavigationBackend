@@ -1,5 +1,5 @@
 module.exports = function(req, res, next){
-    var points = req.custom.points;
+    var points = req.custom.controls;
 
     // TODO: Make valid inside
     var renderedControls = []

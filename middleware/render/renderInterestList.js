@@ -1,6 +1,6 @@
 module.exports = function(req, res, next){
 
-    var interests = req.custom.points;
+    var interests = req.custom.interests;
 
     var renderedInterests = [];
     interests.forEach(interest => {

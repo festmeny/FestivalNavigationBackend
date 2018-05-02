@@ -20,7 +20,7 @@ module.exports = function(req, res, next){
                         return next(error);
                     }
 
-                    req.custom.points = items;
+                    req.custom.controls = items;
                     return next();
                 });
         });
