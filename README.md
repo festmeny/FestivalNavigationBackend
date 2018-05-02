@@ -15,5 +15,8 @@ The backend offers public and admin api:
 * Manipulate edges between control points thus creating walkable paths
 * Manipulate interest points
 
+Test mongo db:
+https://drive.google.com/open?id=1mfcGSeVdm3S3VVWk8VIkPwRl-tL8M0hl
+
 Endpoints:
 https://app.swaggerhub.com/apis/festmeny/FestivalNavigation/1.0.0
