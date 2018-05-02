@@ -18,6 +18,7 @@ var validateNeighbors = require('../middleware/utils/validateNeighbors');
 var unifyPointNames = require('../middleware/utils/unifyPointNames');
 
 router.get('/maps/:mapId/interests',
+    getType,
     getInterestList,
     unifyPointNames,
     getEdgesForPointList,
