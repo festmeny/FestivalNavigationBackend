@@ -4,11 +4,14 @@ var Edge = require('../../models/edge');
 var Control = require('../../models/control');
 
 
-module.exports = function(req, res, next){
+module.exports = async function(req, res, next){
 
     var startPoint = req.custom.point;
     var endPointIds = req.body.neighbors;
     var map = req.custom.map;
+
+    if (!endPointIds || endPointIds.length == 0)
+        return next();
 
     // First delete all edges with startId
     Edge.deleteMany({$or: [
@@ -31,16 +34,79 @@ module.exports = function(req, res, next){
     });
 
     // Then find all endPoints
-    Control.find({
+    await Control.find({
         _id: { $in: endPointIds}
-    })
-    .exec((err, endPoints) => {
-        if (err){
-            var error = new Error('cannot get points for edges');
-            error.status = 500;
-            return next(error);
+    }).exec();
+
+    var finalEdges = [];
+    endPointIds.forEach(async (endPointId) => {
+        
+        let endPoint = await Control.findById(endPointId).exec();
+
+        var distance = Geolib.getDistance(
+            {latitude: startPoint.lat, longitude: startPoint.lon },
+            {latitude: endPoint.lat, longitude: endPoint.lon}
+        )
+
+        var piece = distance / 20;
+        console.log(piece);
+
+        var prevPoint = startPoint;
+        for (var index=1; index <= piece; index++ ){
+            try{
+                let currentPoint = await Control.create({
+                    lat: (((endPoint.lat - startPoint.lat) / piece) * index) + startPoint.lat,
+                    lon: (((endPoint.lon - startPoint.lon) / piece) * index) + startPoint.lon,
+                    map: map
+                });
+
+                await Edge.create({
+                    point_start: prevPoint._id,
+                    point_end: currentPoint._id,
+                    length: Geolib.getDistance(
+                        {latitude: prevPoint.lat, longitude: prevPoint.lon },
+                        {latitude: currentPoint.lat, longitude: currentPoint.lon}
+                    ),
+                    map: map
+                });
+                
+                finalEdges.push({
+                    point_start: prevPoint._id,
+                    point_end: currentPoint._id,
+                    length: Geolib.getDistance(
+                        {latitude: prevPoint.lat, longitude: prevPoint.lon },
+                        {latitude: currentPoint.lat, longitude: currentPoint.lon}
+                    )
+                })
+                prevPoint = currentPoint;
+            }catch(e){
+                console.log('error:', e);
+            }
         }
 
+        await Edge.create({
+            point_start: prevPoint._id,
+            point_end: endPoint._id,
+            length: Geolib.getDistance(
+                {latitude: prevPoint.lat, longitude: prevPoint.lon },
+                {latitude: endPoint.lat, longitude: endPoint.lon}
+            ),
+            map: map
+        })
+        finalEdges.push({
+            point_start: prevPoint._id,
+            point_end: endPoint._id,
+            length: Geolib.getDistance(
+                {latitude: prevPoint.lat, longitude: prevPoint.lon },
+                {latitude: endPoint.lat, longitude: endPoint.lon}
+            )
+        })
+    });
+
+    req.custom.point.edges = finalEdges;
+    return next();
+
+/*
         // And create edges between startPoint and endPoints
         Edge.create(endPoints.map( endPoint=> {
             return {
@@ -65,5 +131,6 @@ module.exports = function(req, res, next){
             error.status = 500;
             return next(error);
         })
-    });
+        */
+    
 };
