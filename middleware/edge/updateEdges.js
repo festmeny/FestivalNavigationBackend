@@ -52,7 +52,7 @@ module.exports = async function(req, res, next){
         console.log(piece);
 
         var prevPoint = startPoint;
-        for (var index=1; index <= piece; index++ ){
+        for (var index=1; index < piece; index++ ){
             try{
                 let currentPoint = await Control.create({
                     lat: (((endPoint.lat - startPoint.lat) / piece) * index) + startPoint.lat,
