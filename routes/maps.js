@@ -6,6 +6,9 @@ var createMap = require('../middleware/maps/createMap');
 var getMap = require('../middleware/maps/getMap');
 var updateMap = require('../middleware/maps/updateMap');
 var deleteMap = require('../middleware/maps/deleteMap');
+var deleteAllControlForMap = require('../middleware/controls/deleteAllControlForMap');
+var deleteAllInterestForMap = require('../middleware/interests/deleteAllInterestForMap');
+var deleteAllEdgeForMap = require('../middleware/edge/deleteAllEdgeForMap');
 var getControlList = require('../middleware/controls/getControlList');
 var getInterestList = require('../middleware/interests/getInterestList');
 var getAllEdges = require('../middleware/edge/getAllEdges');
@@ -43,6 +46,9 @@ router.put('/maps/:mapId',
 
 router.delete('/maps/:mapId',
     getMap,
+    deleteAllControlForMap,
+    deleteAllInterestForMap,
+    deleteAllEdgeForMap,
     deleteMap
 );
 

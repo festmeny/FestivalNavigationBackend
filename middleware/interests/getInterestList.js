@@ -10,7 +10,14 @@ module.exports = function(req, res, next){
                 return next(error);
             }
 
-            Interest.find({map: req.params.mapId})
+            var query;
+            if (!req.custom.type){
+                query = {map: req.params.mapId};
+            }else{
+                query = {map: req.params.mapId, type: req.custom.type._id};
+            }
+
+            Interest.find(query)
                 .populate('type')
                 .exec((err, items) => {
 
